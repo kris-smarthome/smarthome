@@ -32,14 +32,13 @@ Additional applications:
 - [10000] Portainer agent
 
 ## Post installation
-Some applications require addtitional configuration, this is detailed below and also, comments are also included in the docker-compose.yml file.
+Some applications require addtitional configuration, this is detailed below. Comments are also included in the docker-compose.yml file.
 
 ### Home Assistant:
 ```
 sudo chown -R <user> app_data/homeassistant
 nano app_data/homeassistant/configuration.yaml
 ```
-
 Add the following to set the Home Assistant port to 9000
 ```
   http:
@@ -52,7 +51,7 @@ sudo docker container restart homeassistant
 
 ### Mosquitto
 
-Set MQTT username and password
+Create the user mqtt and set a password:
 
 ```
 sudo docker exec -it mosquitto sh
@@ -76,3 +75,12 @@ Restart the container:
 ```
 sudo docker container restart homeassistant
 ```
+
+### Code Server
+
+The following extensions should be enabled for auto complete and additional Home Assistant helpers:
+- emilast.LogFileHighlighter
+- keesschollaart.vscode-home-assistant
+- oderwat.indent-rainbow
+- redhat.vscode-yaml
+- usernamehw.errorlens
