@@ -59,7 +59,7 @@ services:
   # sudo chown -R <user> app_data/homeassistant
   # nano app_data/homeassistant/configuration.yaml
   # 
-  # Add the following to change the HomeAssistant port to 9001
+  # Add the following to change the HomeAssistant port to 9000
   # http:
   #   server_port: 9000
   #

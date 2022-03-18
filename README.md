@@ -9,7 +9,7 @@ docker network create inside_network
 Set the following variables in the .env file, examples are given in square brackets:
 - PUID= [the PUID of your user account - $ id] 
 - PGID= [the PGID of your user account - $ id] 
-- TZ= [Europe/London"]
+- TZ= ["Europe/London"]
 - DOCKERDIR= ["/home/user/docker"]
 - SESSION_SECRET= [anythingyoulike]
 
@@ -34,16 +34,45 @@ Additional applications:
 ## Post installation
 Some applications require addtitional configuration, this is detailed below and also, comments are also included in the docker-compose.yml file.
 
-### HomeAssistant: IOT platform
+### Home Assistant:
 ```
 sudo chown -R <user> app_data/homeassistant
 nano app_data/homeassistant/configuration.yaml
 ```
 
-Add the following to set the HomeAssistant port to 9001
+Add the following to set the Home Assistant port to 9000
 ```
   http:
-    server_port: 9000
+    server_port: 9000 
 ```
-Restart the container: sudo ```docker container restart homeassistant```
+Restart the container: 
+```
+sudo docker container restart homeassistant
+```
 
+### Mosquitto
+
+Set MQTT username and password
+
+```
+sudo docker exec -it mosquitto sh
+mosquitto_passwd - c mosquitto/config/mqtt_passwd mqtt
+exit
+```
+Create a mosquitto configuration file
+```
+sudo nano app_data/mosquitto/config/mosqitto.conf 
+```
+Add the following to mosquitto.conf
+```
+listener 1883
+allow_anonymous false
+password_file /mosquitto/config/mqtt_passwd
+persistence true
+persistence_location /mosquitto/data/
+log_dest file /mosquitto/log/mosquitto.log
+```
+Restart the container: 
+```
+sudo docker container restart homeassistant
+```
