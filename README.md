@@ -1,11 +1,14 @@
 # smarthome
 
-Create networks before running docker-compose -p smarthome up -d
-
+Create networks:
 ```
 docker network create inside_network
 ```
 
+Bring up the stack:
+```
+docker-compose -p smarthome up -d
+```
 Applications included with this stack:
 - [9000] Home Assistant
 - [9001] Home Bridge
