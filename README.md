@@ -1,9 +1,17 @@
-# smarthome
+# Smarthome
+Docker compose file for a basic smarthome stack, all application port numbers are shown in square brackets. zwave2mqtt and zigbee2mqtt are disabled by default, uncommenting those sections within the docker-compose file will create those conainers. If enabling either 2mqtt application ensure that devices are set correctly. Remember to create the inside_network and set environment variables before bringing up the stack.
 
 Create networks:
 ```
 docker network create inside_network
 ```
+
+Set the following variables in the .env file, examples are given in square brackets:
+- PUID= [the PUID of your user account - $ id] 
+- PGID= [the PGID of your user account - $ id] 
+- TZ= [Europe/London"]
+- DOCKERDIR= ["/home/user/docker"]
+- SESSION_SECRET= [anythingyoulike]
 
 Bring up the stack:
 ```
@@ -22,3 +30,20 @@ Available applications (not enabled by default):
 
 Additional applications:
 - [10000] Portainer agent
+
+## Post installation
+Some applications require addtitional configuration, this is detailed below and also, comments are also included in the docker-compose.yml file.
+
+### HomeAssistant: IOT platform
+```
+sudo chown -R <user> app_data/homeassistant
+nano app_data/homeassistant/configuration.yaml
+```
+
+Add the following to set the HomeAssistant port to 9001
+```
+  http:
+    server_port: 9000
+```
+Restart the container: sudo ```docker container restart homeassistant```
+
