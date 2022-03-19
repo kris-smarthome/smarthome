@@ -47,7 +47,7 @@ Add the following to set the Home Assistant port to 9000
     server_port: 9000 
 ```
 
-If Home Assistant is going to be acessed from behind a reverse proxy, such as NPM from the application_server stack, add the following additional configuration to the configuration.yaml file:
+If Home Assistant is going to be acessed externally from behind a reverse proxy, such as NPM from the application_server stack, add the following additional configuration to the configuration.yaml file:
 
 ```
   use_x_forwarded_for: true
@@ -58,6 +58,8 @@ If Home Assistant is going to be acessed from behind a reverse proxy, such as NP
   internal_url: ["http://your-host-ip-address:port"]
 
 ```
+
+The external_url and internal_url attributes allow for auto-configuration of the mobile app on setup.
 
 Restart the container: 
 ```
