@@ -46,6 +46,19 @@ Add the following to set the Home Assistant port to 9000
   http:
     server_port: 9000 
 ```
+
+If Home Assistant is going to be served from behind a reverse proxy, such as NPM from the application_server stack, add the follwoing additional configuration to the configuration.yaml file:
+
+```
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - [your-reverse-proxy-ip-address]
+
+  external_url: ["https://your-domain-name"]
+  internal_url: ["http://your-host-ip-address:port"]
+
+```
+
 Restart the container: 
 ```
 sudo docker container restart homeassistant
