@@ -1,5 +1,5 @@
 # Smarthome
-Docker compose file for a basic smarthome stack, all application port numbers are shown in square brackets. zwave2mqtt and zigbee2mqtt are disabled by default, uncommenting those sections within the docker-compose file will create those conainers. If enabling either 2mqtt application ensure that devices are set correctly. Remember to create the inside_network and set environment variables before bringing up the stack.
+Docker compose file for a basic smarthome stack, all application port numbers are shown in square brackets. zwave2mqtt and zigbee2mqtt are disabled by default, uncommenting those sections within the docker-compose file will create those containers. If enabling either 2mqtt application ensure that devices are set correctly. Remember to create the inside_network and set environment variables before bringing up the stack.
 
 Create networks:
 ```
@@ -34,7 +34,7 @@ Additional applications:
 - [10000] Portainer agent
 
 ## Post installation
-Some applications require addtitional configuration, this is detailed below. Comments are also included in the docker-compose.yml file.
+Some applications require additional configuration, this is detailed below. Comments are also included in the docker-compose.yml file.
 
 ### Home Assistant:
 ```
@@ -47,7 +47,7 @@ Add the following to set the Home Assistant port to 9000
     server_port: 9000 
 ```
 
-If Home Assistant is going to be acessed externally from behind a reverse proxy, such as NPM from the application_server stack, add the following additional configuration to the configuration.yaml file:
+If Home Assistant is going to be accessed externally from behind a reverse proxy, such as NPM from the application_server stack, add the following additional configuration to the configuration.yaml file:
 
 ```
   use_x_forwarded_for: true
