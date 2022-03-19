@@ -3,19 +3,21 @@ Docker compose file for a basic smarthome stack, all application port numbers ar
 
 Create networks:
 ```
-docker network create inside_network
+sudo docker network create inside_network
 ```
 
 Set the following variables in the .env file, examples are given in square brackets:
-- PUID= [the PUID of your user account - $ id] 
-- PGID= [the PGID of your user account - $ id] 
+- PUID= [the PUID of your user account] 
+- PGID= [the PGID of your user account] 
 - TZ= ["Europe/London"]
 - DOCKERDIR= ["/home/user/docker"]
 - SESSION_SECRET= [anythingyoulike]
 
+View the PUID and PGID for the current user using the ```id``` command.
+
 Bring up the stack:
 ```
-docker-compose -p smarthome up -d
+sudo docker-compose -p smarthome up -d
 ```
 Applications included with this stack:
 - [9000] Home Assistant
