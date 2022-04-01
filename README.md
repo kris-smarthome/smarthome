@@ -101,3 +101,6 @@ The following extensions should be enabled for auto complete and additional Home
 - oderwat.indent-rainbow
 - redhat.vscode-yaml
 - usernamehw.errorlens
+
+### Updating containers
+A simple bash script for updating your docker containers: https://gist.github.com/kris-smarthome/f759238723c1fff33f24ece580359a46
