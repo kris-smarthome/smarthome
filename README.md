@@ -71,9 +71,8 @@ sudo docker container restart homeassistant
 Create the user mqtt and set a password:
 
 ```
-sudo docker exec -it mosquitto sh
-mosquitto_passwd - c mosquitto/config/mqtt_passwd mqtt
-exit
+sudo docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/conf/mosquitto.passwd mosquitto
+
 ```
 Create a mosquitto configuration file
 ```
@@ -90,7 +89,7 @@ log_dest file /mosquitto/log/mosquitto.log
 ```
 Restart the container: 
 ```
-sudo docker container restart homeassistant
+sudo docker container restart mosquitto
 ```
 
 ### Code Server
