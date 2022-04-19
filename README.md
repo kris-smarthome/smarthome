@@ -1,10 +1,5 @@
 # Smarthome
-Docker compose file for a basic smarthome stack, all application port numbers are shown in square brackets. zwave2mqtt and zigbee2mqtt are disabled by default, uncommenting those sections within the docker-compose file will create those containers. If enabling either 2mqtt application ensure that devices are set correctly. Remember to create the inside_network and set environment variables before bringing up the stack.
-
-Create networks:
-```
-sudo docker network create inside_network
-```
+Docker compose file for a basic smarthome stack, all application port numbers are shown in square brackets. zwave2mqtt and zigbee2mqtt are disabled by default, uncommenting those sections within the docker-compose file will create those containers. If enabling either 2mqtt application ensure that devices are set correctly. 
 
 Set the following variables in the .env file, examples are given in square brackets:
 - PUID [the PUID of your user account] 
@@ -17,7 +12,7 @@ View the PUID and PGID for the current user using the ```id``` command.
 
 Bring up the stack:
 ```
-sudo docker-compose -p smarthome up -d
+sudo docker-compose -p up -d
 ```
 Applications included with this stack:
 - [9000] Home Assistant
