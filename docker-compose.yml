@@ -1,8 +1,5 @@
 # Smarthome stack - Kris 22
 # 
-# Create networks before running docker-compose -p smarthome up -d
-# docker network create inside_network
-
 # .env file variables:
 # $PUID
 # $PGID
