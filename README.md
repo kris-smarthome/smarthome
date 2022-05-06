@@ -68,7 +68,7 @@ Create the user mqtt and set a password:
 ```
 touch ~/docker/app_data/mosquitto/config/mosquitto.conf
 touch ~/docker/app_data/mosquitto/config/mosquitto_passwd
-sudo docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/conf/mosquitto_passwd mosquitto mqtt
+sudo docker-compose exec mosquitto mosquitto_passwd -c /mosquitto/conf/mosquitto_passwd mosquitto
 
 ```
 Create a mosquitto configuration file
@@ -79,7 +79,7 @@ Add the following to mosquitto.conf
 ```
 listener 1883
 allow_anonymous false
-password_file /mosquitto/config/mqtt_passwd
+password_file /mosquitto/config/mosquitto_passwd
 persistence true
 persistence_location /mosquitto/data/
 log_dest file /mosquitto/log/mosquitto.log
