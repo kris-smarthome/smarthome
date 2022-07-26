@@ -10,16 +10,16 @@
 # Stack applications:
 # [9000]  HomeAssistant
 # [9001]  HomeBridge
-# [9002]  Mosquitto MQTT
-# [9003]  ESPHome
-# [9004]  CodeServer
+# [9002]  ESPHome
+# [10443] Scrypted
 #
 # Additional applications:
-# [9005]  zwave2mqtt
-# [9006]  zigbee2mqtt
+# [9003]  CodeServer
+# [9004]  zwaveJS2mqtt
 #
 # Core applications:
 # [10000] Portainer agent
+# [10001] MQTT broker
 
 version: "3.7"
 services:
@@ -36,6 +36,22 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
+  # Mosquitto: MQTT broker
+  #
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    container_name: mosquitto
+    ports:
+      - '10001:1883'
+    restart: unless-stopped  
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+    volumes:
+      - ${DOCKERDIR}/app_data/mosquitto/config:/mosquitto/config/
+      - ${DOCKERDIR}/app_data/mosquitto/data:/mosquitto/data/
+      - ${DOCKERDIR}/app_data/mosquitto/log:/mosquitto/log/
+      - /etc/localtime:/etc/localtime:ro
   
 ### Smarthome stack
   # HomeAssistant: IOT platform
@@ -78,22 +94,6 @@ services:
     volumes:
       - ${DOCKERDIR}/app_data/homebridge:/homebridge
       - /etc/localtime:/etc/localtime:ro
-  # Mosquitto: MQTT broker
-  #
-  mosquitto:
-    image: eclipse-mosquitto:latest
-    container_name: mosquitto
-    ports:
-      - '9002:1883'
-    restart: unless-stopped  
-    environment:
-      - PGID=${PGID}
-      - PUID=${PUID}
-    volumes:
-      - ${DOCKERDIR}/app_data/mosquitto/config:/mosquitto/config/
-      - ${DOCKERDIR}/app_data/mosquitto/data:/mosquitto/data/
-      - ${DOCKERDIR}/app_data/mosquitto/log:/mosquitto/log/
-      - /etc/localtime:/etc/localtime:ro
   # ESPHome: IOT development platform for ESP8266 and ESP32 modules
   #
   esphome:
@@ -102,7 +102,7 @@ services:
     restart: always
     privileged: true
     ports: 
-      - "9003:6052"
+      - "9002:6052"
       - "6123:6123"
     environment:
       - HOME="/"
@@ -110,6 +110,24 @@ services:
       - ${DOCKERDIR}/app_data/esphome:/config:rw
       - /etc/localtime:/etc/localtime:ro
     command: config/ dashboard
+
+  # Scrypted: HomeKit secure video
+  #
+  scrypted:
+    image: koush/scrypted
+    container_name: scrypted
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+        - ${DOCKERDIR}/app_data/scrypted:/server/volume
+        - /etc/localtime:/etc/localtime:ro
+    logging:
+        driver: "json-file"
+        options:
+            max-size: "10m"
+            max-file: "10"
+
+### Additional applications
   # Code-Server: IDE platform for HomeAssisant
   #
   # The following extensions should be enabled for auto complete etc:
@@ -125,7 +143,7 @@ services:
     container_name: code-server
     restart: always
     ports:
-      - "9004:8443"
+      - "9003:8443"
     environment:
       - PGID=${PGID}
       - PUID=${PUID}
@@ -135,49 +153,26 @@ services:
       - ${DOCKERDIR}/app_data/code-server:/config
       - ${DOCKERDIR}/app_data/homeassistant:/config/workspace
       - /etc/localtime:/etc/localtime:ro
-
-### Additional applications
   # ZWave2MQTT: IOT platform
-  # MQTT URL: mtqq://mosquitto:1883
   #
-  #zwavejs2mqtt:
-  #  image: zwavejs/zwavejs2mqtt:latest
-  #  container_name: zwavejs2mqtt
-  #  restart: always
-  #  tty: true
-  #  stop_signal: SIGINT
-  #  ports:
-  #    - "9005:8091" # management interface
-  #    - "3000:3000" # ZWave JS websocket server
-  #  environment:
-  #    - PGID=${PGID}
-  #    - PUID=${PUID}
-  #    - SESSION_SECRET=${SESSION_SECRET}
-  #    - ZWAVJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
-  #    - TZ=${TZ}
-  #  devices:
-    #  Use the /dev/serial/by-id/X serial device for your ZWave device
-    #  - '/dev/serial/by-id/insert_stick_reference_here:/dev/zwave'
-  #  volumes:
-  #    - ${DOCKERDIR}/app_data/zwavejs2mqtt:/usr/src/app/store
-  #    - /etc/localtime:/etc/localtime:ro
-  
-  # Zigbee2MQTT: IOT platform
-  # MQTT URL: mqtt://mosquitto:1883
-  #
-  #zigbee2mqtt:
-  #  image: koenkk/zigbee2mqtt
-  #  container_name: zigbee2mqtt
-  #  restart: always
-  #  ports:
-  #    - 9006:8080
-  #  environment:
-  #    - PGID=${PGID}
-  #    - PUID=${PUID}
-  #    - TZ=${TZ}
-    #devices:
-    #  Use the /dev/serial/by-d/X serial device for your Zigbee device
-    #  - '/dev/serial/by-id/insert_stick_reference_here:/dev/zigbee'
-  #  volumes:
-  #    - ${DOCKERDIR}/app_data/zigbee2mqtt:/app/data
-  #    - /etc/localtime:/etc/localtime:ro
+  zwavejs2mqtt:
+    image: zwavejs/zwavejs2mqtt:latest
+    container_name: zwavejs2mqtt
+    restart: always
+    tty: true
+    stop_signal: SIGINT
+    ports:
+      - "9004:8091" # management interface
+      - "3000:3000" # ZWave JS websocket server
+    environment:
+      - PGID=${PGID}
+      - PUID=${PUID}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - ZWAVJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
+      - TZ=${TZ}
+    # devices:
+      # Use the /dev/serial/by-id/X serial device for your ZWave device
+      #- '/dev/serial/by-id/insert_stick_reference_here:/dev/zwave'
+    volumes:
+      - ${DOCKERDIR}/app_data/zwavejs2mqtt:/usr/src/app/store
+      - /etc/localtime:/etc/localtime:ro
