@@ -19,7 +19,8 @@
 #
 # Core applications:
 # [10000] Portainer agent
-# [10001] MQTT broker
+# [10001] Ouroboros
+# [10002] Mosquitto
 
 version: "3.7"
 services:
@@ -36,13 +37,32 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/volumes:/var/lib/docker/volumes
+  # Ouroboros: container management
+  #
+  ouroboros:
+    image: pyouroboros/ouroboros
+    container_name: ouroboros
+    restart: always
+    ports:
+      - '10001:8080'
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - CLEANUP=true
+      - INTERVAL=86400
+      - LOG_LEVEL=info
+      - SELF_UPDATE=true
+      - TZ=${TZ}
+      - IGNORE="portainer-agent homeassistant"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.soc
   # Mosquitto: MQTT broker
   #
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     ports:
-      - '10001:1883'
+      - '10002:1883'
     restart: unless-stopped  
     environment:
       - PGID=${PGID}
